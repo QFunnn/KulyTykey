@@ -26,7 +26,7 @@ fun fftRecursion(x: Array<ComplexNumber>): Array<ComplexNumber> {
         ComplexNumber(0.0, 0.0)
     }
 
-    for (k in 0..<n / 2) {
+    for (k in 0..< n / 2) {
         val angle = -2.0 * PI * k / n
         val w = ComplexNumber(
             cos(angle),
@@ -34,6 +34,7 @@ fun fftRecursion(x: Array<ComplexNumber>): Array<ComplexNumber> {
         )
 
         val t = w * odd[k]
+
         result[k] = even[k] + t
         result[k + n / 2] = even[k] - t
     }

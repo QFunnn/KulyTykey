@@ -1,12 +1,15 @@
+
 import fft.fftIterational
 import fft.fftRecursion
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.system.measureNanoTime
 
 fun main() {
     val (samples, samplesRate) = readWavSamples("test.wav")
+    println(samples)
 
     fun hann(size: Int): DoubleArray =
         DoubleArray(size) { n ->
@@ -41,7 +44,7 @@ fun main() {
         }
     }
 
-    val N = 2048
+    val N = 2048 // степень двойки
     require(samples.size >= N)
 
     val frame = samples.copyOfRange(0, N)
@@ -96,4 +99,40 @@ fun main() {
             recursionTime.toDouble() / iterativeTime
         )
     )
+
+
+    fun dft(x: Array<ComplexNumber>): Array<ComplexNumber> {
+        val N = x.size
+
+        return Array(N) { k ->
+            var result = ComplexNumber(0.0, 0.0)
+
+            for (n in 0..N-1) {
+                val angle = -2.0 * PI * k * n / N // e^ix = cos(x) + isin(x)
+                val w = ComplexNumber(
+                    cos(angle),
+                    sin(angle)
+                )
+
+                result += x[n] * w
+            }
+
+            result
+        }
+    }
+
+    lateinit var spectrumDFT: Array<ComplexNumber>
+    val dftTIme = measureNanoTime {
+        spectrumDFT = dft(input)
+    }
+
+    println(
+        "FFT : %.3f ms".format(
+            dftTIme / 1_000_000.0
+        )
+    )
+    printSpectrum("test", spectrumDFT, samplesRate, N)
+
+
+    //
 }
