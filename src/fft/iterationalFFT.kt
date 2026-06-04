@@ -44,8 +44,11 @@ fun fftIterational(input: Array<ComplexNumber>): Array<ComplexNumber> {
 
                 val tao = w * x[index2]
 
-                x[index1] = x[index1] + tao
-                x[index2] = x[index1] - tao
+                val u = x[index1]
+                val v = w * x[index2]
+
+                x[index1] = u + v
+                x[index2] = u - v
             }
         }
 
